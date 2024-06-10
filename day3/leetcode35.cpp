@@ -5,10 +5,11 @@ int searchInsert(vector<int>& nums, int target) {
         int n =  nums.size();
         int low = 0; int high = n-1;
         int mid = low+(high - low)/2;
-        int ans = n;//if the element is greater than all the elements in arr
+        //if the element is greater than all the elements in arr
+        int ans = n;
         while(low<= high){
             //suppose the target is not present in arr
-            //u can insert target at a place where the elem is greater than the target so that when the target is inserted at that place the current elem shifts and the sorted order is not disturbed.
+            //u can insert target at a place where the elem is greater than the target(ceil) so that when the target is inserted at that place the current elem shifts and the sorted order is not disturbed.
             if(nums[mid] >= target){
                 ans = mid;
                 high =  mid-1;
