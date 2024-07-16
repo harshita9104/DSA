@@ -19,7 +19,7 @@
             }
         }
         return maxsum;
-
+ }
         //kadane's algo
         //if the sum<0 after any inner teration we dont carry this sum, we first reduce this sum to 0  and then add next element to it and everytime we compare sum with max and if it is more than max we replace max with new sum
         int maxSubArray(vector<int>& nums) {
