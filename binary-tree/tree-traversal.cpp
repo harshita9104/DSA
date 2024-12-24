@@ -30,6 +30,34 @@ void inorder(TreeNode* root, vector<int> &result){
         return result;
     }
 
+//iterative inorder
+
+    //we will take a pointer curr and jab tak left m null nhi mil jata hm is pointer ko left m le jaate rhenge jaise hi curr k left m null mila , stack k top p jo elem h usko ans vector m push karke curr  pointer ko right m le jaao 
+    
+vector<int> inorderTraversal(TreeNode* root) {
+        stack<TreeNode*> st;
+        vector<int> ans;
+        TreeNode* curr = root;
+        while(true){
+            if(curr != NULL){
+                st.push(curr);
+                curr = curr->left;
+            }else{
+                if(st.empty()){
+                    break;
+                }
+                curr = st.top();
+                ans.push_back(curr->val);
+                curr = curr->right;
+            }
+        }
+        return ans;
+    }
+
+
+
+
+
     class Solution {
 public:
         vector<vector<int>> output;//This will store the final result, a vector of vectors where each inner vector represents a level in the tree.
@@ -66,3 +94,4 @@ public:
         return output;
     }
 };
+

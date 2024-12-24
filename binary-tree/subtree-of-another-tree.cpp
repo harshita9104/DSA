@@ -3,6 +3,17 @@
 
 // A subtree of a binary tree tree is a tree that consists of a node in tree and all of this node's descendants. The tree tree could also be considered as a subtree of itself.
 
+// Example 1:
+
+//      root                     subRoot
+//       3                         4
+//      / \                       / \
+//     4   5                     1   2
+//    / \
+//   1   2
+
+// Input: root = [3,4,5,1,2], subRoot = [4,1,2]
+// Output: true
 
 
 

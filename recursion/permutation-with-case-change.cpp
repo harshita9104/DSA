@@ -13,7 +13,7 @@ void permute(string s, string op){
   op2.push_back(toupper(s[0]));
   //we have taken decision for this ip now erase it to get smaller ip
   s.erase(s.begin() + 0);
-  //recursively call the permute function for smaller op and both the outputs individually as each forms a leaf node
+  //recursively call the permute function for smaller ip and both the outputs individually as each forms a leaf node
   //the input is updated this time and new op acc to choices will be added in op string
   permute(s,op1);
   permute(s,op2);
