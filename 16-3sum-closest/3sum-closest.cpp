@@ -19,7 +19,7 @@ public:
                   i++;
                 } else if(sum > target){
                     j--;
-                }else{
+                }else{//sum = target hai to return kardo kyuki vahi min abs value hai 
                     return sum;
                 }
                
