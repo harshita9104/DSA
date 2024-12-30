@@ -1,5 +1,6 @@
 class Solution {
 public:
+ //we will sort the strings, all the anagrams will be converted to a single string after sorting and to group all these anagrams together, we will use a map which will map the sorted string with their corresponding family of anagrams.
     vector<vector<string>> groupAnagrams(vector<string>& strs) {
         vector<vector<string>> result;
         int n = strs.size();
