@@ -1,33 +1,28 @@
 class Solution {
 public:
-    string reverseVowels(string s) {
-        // Convert the input string to a character array.
-        string word = s;
-        int start = 0;
-        int end = s.length() - 1;
-        string vowels = "aeiouAEIOU";
-        
-        // Loop until the start pointer is no longer less than the end pointer.
-        while (start < end) {
-            // Move the start pointer towards the end until it points to a vowel.
-            while (start < end && vowels.find(word[start]) == string::npos) {
-                start++;
-            }
-            
-            // Move the end pointer towards the start until it points to a vowel.
-            while (start < end && vowels.find(word[end]) == string::npos) {
-                end--;
-            }
-            
-            // Swap the vowels found at the start and end positions.
-            swap(word[start], word[end]);
-            
-            // Move the pointers towards each other for the next iteration.
-            start++;
-            end--;
+//write a function to check if a char is vowel or not
+    bool isVowel(char &ch){
+        //this function takes a char as input and check if its a vowel or not
+        if(ch == 'a'||ch =='e'||ch == 'i'||ch =='o'||ch == 'u'||ch =='A'||ch == 'E'||ch =='I'||ch == 'O'||ch =='U'){
+            return true;
+        }else{
+            return false;
         }
-        
-        // Return the modified string.
-        return word;
+    }
+    string reverseVowels(string s) {
+    
+        int n = s.size();
+        int i = 0; 
+        int j = n-1;
+        while(i<j){
+            //if s[i] is not a vowel so we move ahead i++ and if s[j] is not vowel then j--
+            if(!isVowel(s[i])) i++;
+            if(!isVowel(s[j])) j--;
+            if(isVowel(s[i]) && isVowel(s[j])){
+                swap(s[i], s[j]);
+                i++;j--;
+            }
+        }
+        return s;
     }
 };
