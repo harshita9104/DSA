@@ -1,28 +1,20 @@
 class Solution {
 public:
-    string solve(set<string>& unique, string temp, int index, int n){
-        // Base case: we've built a complete string of length n
-        if(index == n){
-            // If this string is NOT in the set, we found our answer!
-            if(unique.find(temp) == unique.end()){
-                return temp;
-            }
-            return ""; // This string exists, return empty to indicate failure
-        }
-        
-        // Try adding '0' to current string
-        string result = solve(unique, temp + "0", index + 1, n);
-        if(result != "") return result; // If we found answer, return it
-        
-        // Try adding '1' to current string  
-        result = solve(unique, temp + "1", index + 1, n);
-        return result; // Return result (either found string or empty)
-    }
-    
     string findDifferentBinaryString(vector<string>& nums) {
-        set<string> unique(nums.begin(), nums.end());
-        int n = nums[0].size();
-        string temp = "";
-        return solve(unique, temp, 0, n);
+        //its given that no. of string in nums are n and length of those strings will be n
+        //so hm index 0 par 0th index wali string k index 0 par jo hai uska ulta rakh skte taaki uske similar to kabhi nhi hogi hmari string
+        //similarly sari strings se diff karne k liye har index par aese hi kar skte
+        int j =0;
+        string result = "";
+        for(int i =0; i<nums.size(); i++){
+            string temp = nums[i];
+            if(temp[i] == '0'){//check only ith char for ith index 
+                result += "1";
+            }else{
+                result += "0";
+            }
+
+        }
+        return result;
     }
 };
