@@ -11,33 +11,27 @@
  */
 class Solution {
 public:
-    bool isCompleteTree(TreeNode* root) {
-        //hm level order traversal m har level ko left se right order m traverse to koi bhi tree complete binary tree tab nhi hoga jab traverse krte hue ek baar null val mil gya or uske baad not null agar present hai to simply return false
-         queue<TreeNode*> q;
-    q.push(root);
-    bool foundNullChild = false;
+    void dfs(TreeNode* root, unsigned long long index, int &count, unsigned long long &maxIndex) {
+        if(root == NULL) return;
 
-    while (!q.empty()) {
-        TreeNode* curr = q.front();
-        q.pop();
+        count++;
+        maxIndex = max(maxIndex, index);
 
-        // Left child
-        if (curr->left) {
-            if (foundNullChild) return false; // After null, we shouldn't find any children
-            q.push(curr->left);
-        } else {
-            foundNullChild = true;
-        }
-
-        // Right child
-        if (curr->right) {
-            if (foundNullChild) return false;
-            q.push(curr->right);
-        } else {
-            foundNullChild = true;
-        }
+        dfs(root->left, 2 * index, count, maxIndex);
+        dfs(root->right, 2 * index + 1, count, maxIndex);
     }
-    return true;
-       
+
+    bool isCompleteTree(TreeNode* root) {
+        int count = 0;
+        unsigned long long maxIndex = 0;
+
+        dfs(root, 1, count, maxIndex);
+
+        return maxIndex == count;
     }
 };
+        //for a ith node i starting from 1 its left child will be at 2*i node and its right child will be at 2*i+1 node in array seq of level order traversal of tree
+        // so first we will count total no of nodes in this tree
+        //and if the node is null at any index then we need to keep that empty
+        //so if the arr.size() > total nodes it means a index is empty in arr and tree is not complete
+        
