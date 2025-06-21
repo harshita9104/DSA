@@ -12,6 +12,10 @@ class Solution {
 public:
     // Helper function to perform DFS and find all root-to-leaf paths with the given sum
     bool flag = false;
+    //here pathsum is passed by value so that each recursive call maintaines a copy of pathsum and when i backtrack on prev node it is on prev rec call so pathsum val in this rec call will have its own copy that is the val till curr node
+    
+    //there is no mess when we backtrack to explore other paths becoz when pass by ref org var gets changed in each rec call then modifying pathsum would be difficult during backtracking
+
     void solve(TreeNode* root, int pathsum,  int targetSum) {
         if (root == NULL) return; // Base case: If node is null, just return
 
