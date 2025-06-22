@@ -57,7 +57,7 @@ public:
         minv = min(minv, root->val);
         int leftpath = solve(root->left, maxv, minv);//root k left child wale path ka abs a-b return kar rha h
         int rightpath = solve(root->right, maxv, minv);//root k right child wale path ka abs a-b return kar rha hai 
-        return max(leftpath, rightpath);//dono path m se jo bhi max diff h vo return kro
+        return max(leftpath, rightpath);//dono path m se jo bhi max diff h vo return kro//ye last wali line har baar execute hogi kyuki root ki left subtree ki bhi left or right subtree hai or har subtree k liye leftpath or rightpath cal hoga or usme se max return hoga current subtree kisi root ki left ya right subtree hogi to us root k liye ye wale jaake store ho jaegi phir is current root ki max val uske upar wale node ko return hogi
 
     }
     int maxAncestorDiff(TreeNode* root) {
