@@ -12,15 +12,22 @@
 class Solution {
 public:
     
-            void solve(TreeNode* root,vector<int> path, int &ans){
+    void solve(TreeNode* root,vector<int> path, int &ans){
         if(root == NULL)return;
         path.push_back(root->val);
         if(root->left == NULL && root->right == NULL){
-            for(int a= 0; a< path.size()-1; a++){//a pointer will be always behind b so a ko 2nd last elem tk leke jao b ko last tk
-                for(int b = a; b< path.size(); b++){
-                    ans = max(abs(path[a] - path[b]), ans);
-                }
+            // for(int a= 0; a< path.size()-1; a++){//a pointer will be always behind b so a ko 2nd last elem tk leke jao b ko last tk
+            //     for(int b = a; b< path.size(); b++){
+            //         ans = max(abs(path[a] - path[b]), ans);
+            //     }
+            // }
+            int a = INT_MIN;
+            int b = INT_MAX;
+            for(int i= 0; i< path.size(); i++){
+                a= max(a, path[i]);
+                b = min(b, path[i]);
             }
+            ans = max(abs(a - b), ans);
         }
     //agar leaf node nhi h to aage traverse karo tree m by making rec call 
     //func void hai isliye root->left ko assign nhi kiya    
