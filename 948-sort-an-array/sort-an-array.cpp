@@ -1,24 +1,47 @@
 class Solution {
 public:
-    vector<int> sortArray(vector<int>& nums) {
-        //counting sort
-        // map m store krlo , phir min or max elem find karlo
-        //phir minelem or max elem tak loop run krke jitni baar map m value hai nums[i]
-        //m ddaldo
-        unordered_map<int, int> mp;
-        for(int &num : nums){//jaise iterate kr rhe nums[i] is num 
-            mp[num]++;
-        }
-        int min = *min_element(nums.begin(), nums.end());
-        int max = *max_element(nums.begin(), nums.end());
-        int i =0;//to keep track of nums 
-        for(int num = min; num<= max; num++){
-        while(mp[num] >0){
-            nums[i] = num;
-            i++;
-            mp[num]--;//ek elem nums arr m daal diya to count km kro
+ void conquer(vector<int> &nums, int mid, int s, int e){
+            vector<int> merged(e-s+1);
+            int idx1 = s;//to keep track of 1st sorted arr
+            int idx2 = mid+1;//to keep track of 2nd sorted arr
+            int x =0;//keep track of merged 
+            while(idx1 <= mid && idx2 <= e){
+                if(nums[idx1] <= nums[idx2]){
+                    merged[x++] = nums[idx1++];
+                }else{
+                     merged[x++] = nums[idx2++];
+                }
             }
-        }
+            while(idx1 <= mid){
+                merged[x++] = nums[idx1++];
+            }
+            while(idx2 <= e){
+                merged[x++] = nums[idx2++];
+            }
+
+            for(int i =0, j = s; i< merged.size(); i++, j++){
+                nums[j] = merged[i];
+            }
+        };
+void divide(vector<int> &nums, int s, int e){
+            int mid = s +(e-s)/2;
+            //ab recursively call karke divide kro actual m divide nhi hoga nums bas pointers move honge s to mid ek arr or mid+1 to e - 2nd arr
+            if(s>=e)return;//BC- ye tab hoga jab arr m ek hi elem bacha h or ek elem sorted hota h apne aap m
+            divide(nums, s, mid);
+            divide(nums, mid+1, e);
+            conquer(nums, mid, s,e);
+        };
+    vector<int> sortArray(vector<int>& nums) {
+        
+
+        //merge sort - divide and conquer
+       
+        
+        int s =0;
+        int n = nums.size();
+        int e = n-1;
+        divide(nums,0,n-1);
         return nums;
+
     }
 };
