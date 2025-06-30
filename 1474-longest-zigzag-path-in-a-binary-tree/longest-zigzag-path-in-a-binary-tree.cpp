@@ -11,24 +11,22 @@
  */
 class Solution {
 public:
-int longest = 0;
-void solve(TreeNode* root, int steps, bool goleft){
-    //bool goleft btata hai ki left jana h or agar ye false h to it means right jana h 
+int longest =0;
+void solve(TreeNode* root, int path, bool goleft){
     if(root == NULL)return;
-    longest = max(longest,steps);
+    longest = max(longest, path);
     if(goleft == true){
-        solve(root->left, steps+1, false);//mtlb jana left m tha or mai left m hi gyi to steps++ or ab next right jana hai to goleft ko false
-        solve(root->right, 1, true);
+        solve(root->left, path +1,false );//left m jaana tha or left m gye to path++ or ab next call m right m jana hoga isliye goleft = false
+        solve(root->right, 1, true);//left m jana tha par right m chle gye to zig zag pattern break ho gy path 1 se start hoga 
     }else{
-        solve(root->left, 1, false);//mtlb jana right m tha or mai left m hi gyi to steps or
-        solve(root->right, steps+1, true);
+        solve(root->left, 1, false);
+        solve(root->right, path+1, true);
     }
 }
-    int longestZigZag(TreeNode* root) {
-        int steps =0;
-        solve(root, steps, true);
-        solve(root, steps, false);
+   int longestZigZag(TreeNode* root) {
+        bool goleft = true;
+        int path =0;
+        solve(root, 0, true);
         return longest;
-        
     }
 };
