@@ -1,23 +1,9 @@
 class Solution {
 public:
-   bool iscyclic(int u,unordered_map<int, vector<int>> &adj, vector<bool> &visited, vector<bool> &recpath){
-    visited[u] = true;
-    recpath[u] = true;
-    for(int &v : adj[u]){
-        if(!visited[v]){
-            if(iscyclic(v,adj, visited, recpath))return true;//agar aage k call m kahi cycle mili or true return hoke aa rhi hogi to hm return kr dengge
-        }else{
-            //neigbor visited h to check kro recpath m kya
-            if(recpath[v] == true)return true;
-        }
-    }
-    //if we have reached a node which doesnt have neigh then backtrack and remove it from recpath
-    //and this is end of curr rec path so return false that no cycle found on this path
-    recpath[u] = false;
-    return false;
-   }
+   
     bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
         unordered_map<int, vector<int>> adj;//create adj list from given 2d vector
+        vector<int> indegree(numCourses, 0);
         for(vector<int> &edge: prerequisites){
             int u = edge[1];
             int v = edge[0];
@@ -25,18 +11,38 @@ public:
             //so there is edge from b to a
             //so u is b, and v is a in prerequisites[i]
             adj[u].push_back(v);
+            indegree[v]++;
             // adj[v].push_back(u);
         }
         vector<bool> visited(numCourses, false);
-        vector<bool> recpath(numCourses, false);
+     
 
         // the question is all about is a topo sort possible for this graph
         //so we just need to check if the graph is acyclic or not
-        //in directed we check cyclic using recpath , if we encounter a neighbor
-        //which part of same recapth then cycle exist
-        for(int i =0; i<numCourses; i++){
-            if(!visited[i] && (iscyclic(i, adj, visited, recpath)))return false;
+        //using bfs 1st we need to find indegree of all nodes then push the indegree 0 nodes in q first
+        //then as u pop a node from q for all its neighbors do indegree--, and only push a node inside q when indegree of a node becomes 0
+        int count=0;
+       queue<int> q;
+       for(int i =0; i<numCourses; i++){
+        if(indegree[i] == 0){
+            q.push(i);
+            count++;
+            visited[i] = true;
         }
-        return true;
+       }
+       while(!q.empty()){
+        int curr = q.front();
+        q.pop();
+        for(int &v : adj[curr]){
+            if(!visited[v]){
+                indegree[v]--;
+                if(indegree[v] == 0){
+                    q.push(v);
+                    count++;
+                }
+            }
+        }
+       }
+    return count == numCourses;
     }
 };
