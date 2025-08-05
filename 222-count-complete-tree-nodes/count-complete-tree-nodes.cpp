@@ -11,19 +11,13 @@
  */
 class Solution {
 public:
+int solve(TreeNode* root, int count){
+    if(root == NULL)return 0;
+    int left = solve(root->left, count+1);
+    int right =solve(root->right, count+1);
+    return 1+left+right;
+}
     int countNodes(TreeNode* root) {
-        if(root == NULL)return 0;
-        queue<TreeNode*> q;
-        int count =0;
-        
-        q.push(root);
-        while(!q.empty()){
-            TreeNode* curr = q.front();//ek ek karke bfs traversal m har node q k front par aayega or hm usse count karelenge
-            count++;
-            q.pop();
-            if(curr->left != NULL)q.push(curr->left);
-            if(curr->right != NULL)q.push(curr->right);
-        }
-        return count;
+        return solve(root, 0);
     }
 };
