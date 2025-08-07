@@ -11,14 +11,21 @@
  */
 class Solution {
 public:
-    bool issametree(TreeNode* a, TreeNode* b){
-        if(a == NULL && b == NULL)return true;
-        if(a == NULL || b == NULL)return false;
-        if(a->val != b->val)return false;
-        //only mistake is for symmetry i need to compare left child with right child and right with left child
-        return issametree(a->left, b->right) && issametree(a->right, b->left);
-    }
+bool solve(TreeNode* p, TreeNode* q){
+    if(p == NULL && q == NULL)return true;
+    if(p == NULL || q == NULL)return false;
+    //few conditions need to be true for a tree to be symmetric
+    //the value of p and q need to be eq after curr root in rec call is checked we need to check this for their left and right child
+    //p or q dono eq hai or ek dusre ki mirror images h
+    // ab check krna hai ki p ka left child or q ka right child eq hona chahiye
+    //and p ka right child or q ka left child equal hona chahiye
+    //ye teeno condition true hona chahiye
+    bool check = p->val == q->val;
+    bool leftcheck = solve(p->left, q->right); 
+     bool rightcheck = solve(p->right, q->left); 
+     return check&&leftcheck&&rightcheck;
+}
     bool isSymmetric(TreeNode* root) {
-        return issametree(root->left, root->right);
+      return solve(root->left, root->right);
     }
 };
