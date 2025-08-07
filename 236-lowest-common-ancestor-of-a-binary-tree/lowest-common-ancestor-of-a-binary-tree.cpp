@@ -10,24 +10,16 @@
 class Solution {
 public:
     TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
-        if(root == NULL){
-            return NULL;
-        }
-        if(root == p || root == q){
-            return root;
-        }
-        
-       TreeNode*  leftn = lowestCommonAncestor(root->left, p, q);
-       TreeNode*  rightn = lowestCommonAncestor(root->right, p, q);
-
-        if(leftn != NULL && rightn != NULL){
-            return root;//it means this root has got p and q from its  left and right child calls so this is only my lcs 
-        }
-        if(leftn != NULL && rightn == NULL){
-            return leftn; //becoz it is given tht p and q both exists since we got null from right child call and a not null value from leftn which store the root node  where we have found our p or q so that node is only lca coz in its child nodes we will find the other q or p.
-        }
-        // if(leftn == NULL && rightn != NULL)
-            return rightn; 
-        
+        //jha par p ya q mil jae vahi par root return krdo
+        // jab backtrack hokar ye value prev ancestors par jaegi tab agar kisi node n apne left or right child dono se not null response receive kiya iska mtlb that node is only lowest common ancestor kyuki p or q k path root node ki taraf wapis jaate hue isi node par phli baar mile
+        //agar sirf ek left ya right child se not null value aaye iska mtlb dusra elem p or q is also located in the children node of that node jha par p or q mila to jha mila hai vahi lcs hoga 
+        //to jo value return hoke aa rhi hogi vahi lca hogi
+if(root == NULL)return NULL;
+if(root == p|| root == q)return root;
+TreeNode* leftcall = lowestCommonAncestor(root->left, p, q);
+TreeNode* rightcall = lowestCommonAncestor(root->right, p, q);
+if(leftcall != NULL && rightcall != NULL)return root;
+if(leftcall != NULL)return leftcall;
+return rightcall;
     }
 };
