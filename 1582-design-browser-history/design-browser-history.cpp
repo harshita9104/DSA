@@ -1,37 +1,48 @@
 class BrowserHistory {
 public:
-    list<string> dll;                       // Doubly linked list to store the history of urls
-    list<string>::iterator current;         // Iterator to keep track of the current page
+    string current;                // Current page
+    stack<string> backward;        // Stack for back history
+    stack<string> forward_;        // Stack for forward history
 
-    // Constructor: initializes the browser history with the homepage
     BrowserHistory(string homepage) {
-        dll.push_back(homepage);            // Push the homepage to the list
-        current = dll.begin();              // Set current pointer to homepage
+        current = homepage;        // Start at homepage
     }
     
-    // Visit a new URL from the current page
     void visit(string url) {
-        // When visiting a new url, clear all forward history
-        auto it = current;
-        ++it;                               // Move to the next element (i.e., one step ahead of current)
-        dll.erase(it, dll.end());           // Erase everything ahead (forward history)
-        dll.push_back(url);                 // Add the new url to the end of the list
-        current = prev(dll.end());          // Set current to the new last element (new page)
+        // On visiting new url, push current to back stack
+        backward.push(current);
+        current = url;
+        // Clear forward stack (can't go forward after a new visit)
+        while (!forward_.empty()) forward_.pop();
     }
     
-    // Move back in history up to 'steps', but not beyond the homepage
     string back(int steps) {
-        while (steps-- && current != dll.begin()) {
-            --current;                      // Move back one page at a time
+        // Go back up to 'steps' times or until you can't go back more
+        while (steps > 0 && !backward.empty()) {
+            forward_.push(current);         // Push current to forward stack
+            current = backward.top();       // Pop from back stack and make it current
+            backward.pop();
+            steps--;
         }
-        return *current;                    // Return the current url
+        return current;
     }
     
-    // Move forward in history up to 'steps', but not beyond the most recent page
     string forward(int steps) {
-        while (steps-- && next(current) != dll.end()) {
-            ++current;                      // Move forward one page at a time
+        // Go forward up to 'steps' times or until you can't go forward more
+        while (steps > 0 && !forward_.empty()) {
+            backward.push(current);         // Push current to back stack
+            current = forward_.top();       // Pop from forward stack and make it current
+            forward_.pop();
+            steps--;
         }
-        return *current;                    // Return the current url
+        return current;
     }
 };
+
+/**
+ * Your BrowserHistory object will be instantiated and called as such:
+ * BrowserHistory* obj = new BrowserHistory(homepage);
+ * obj->visit(url);
+ * string param_2 = obj->back(steps);
+ * string param_3 = obj->forward(steps);
+ */
