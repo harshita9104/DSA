@@ -1,18 +1,16 @@
 class Solution {
 public:
     int removeDuplicates(vector<int>& nums) {
-        int n = nums.size();
-        
-        int j=1;
-        //curr p rhke chcek kro vo prev k eq to nhi h agar nhi h to hi nums[j] m vo val daalo kyuki vo uniqe hai agar equal hota to kuch mt karo aage badh jaao
-        for(int i = 1; i<n; i++){
-            if(nums[i] != nums[i-1]){
-                nums[j] = nums[i];
-                j++;
-            }else{
-                continue;//aage badho loop m kuch nhi krna
-            }
+        set<int> st;
+        // If you require a container that stores unique elements while preserving the order of insertion, you would typically use std::unordered_set
+        for(int num : nums){
+            st.insert(num);
         }
-        return j;//this is pointing at the last unique elem in nums
+        int i=0;
+        for(int it: st){
+            nums[i] = it;
+            i++;
+        }
+        return st.size();
     }
 };
