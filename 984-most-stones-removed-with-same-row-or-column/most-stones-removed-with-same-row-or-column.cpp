@@ -1,32 +1,28 @@
 class Solution {
 public:
-   void dfs(int u, vector<bool> &vis, vector<vector<int>>& stones){
-    vis[u] = true;
-    //u is the representing a stone u is the index of a stone in stones vector
-    int x = stones[u][0];
-    int y = stones[u][1];
-    for(int i = 0; i<stones.size(); i++){
-        if((!vis[i] && stones[i][0] == x )|| (!vis[i] && stones[i][1] == y)){
-            dfs(i, vis, stones);
+void dfs(int u, vector<vector<int>>& stones, vector<bool> &visited){
+    visited[u] = true;
+    for(int i =0; i<stones.size(); i++){
+        if((!visited[i] && stones[u][0] == stones[i][0])||( !visited[i] &&stones[u][1] == stones[i][1])){
+            dfs(i, stones, visited);
         }
     }
-   }
+}
     int removeStones(vector<vector<int>>& stones) {
-        //isme no of connected components  = jitne stones remove nhi ho skte 
-        //kyuki jo same  connected component m h yani jinka row ya col same h unko hm hta denge last m
-        //us component ka ek stone bachega jisko nhi hta skte
-        // simple no of strongly connected comp nikalke dfs se traverse krke
-        // usko n se subtract krdo
+        //agar kisi stone se row ya col match kr rha to unko graph k same component m daldo
+        //ek connected component k sare points par jo stone h vo remove ho skte bas jo last m bachega kyuki koi or stone nhi hoga us row or col m to har connected component m last m ek stone remove nhi ho skta
+        //yani jitne no of connected component hai utne stones remove nhi ho skte
         int n = stones.size();
-        vector<bool> vis(n, false);
-        int comp =0;
-        //jitne coordinates given h utne stones h kyuki ek cord pr ek stone h
-        for(int i = 0; i<n; i++){
-            if(!vis[i]){
-                dfs(i, vis, stones);
-                comp++;
+        vector<bool> visited(n, false);
+        //ek dfs call lagao ek stone par , or dfs m baad m stones vector m traverse krke same row or col wale baaki stones par bhi call lga dena same component wale stones ek dfs call m traverse ho jaenge
+        int connected =0;
+        //let say each stone has label same as the index number in vector stones
+        for(int i =0; i< stones.size(); i++){
+           
+            if(!visited[i]){dfs(i, stones, visited);
+             connected++;
             }
         }
-        return n-comp;
+        return n - connected;
     }
 };
