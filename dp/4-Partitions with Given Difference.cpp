@@ -16,7 +16,7 @@ Constraint:
 0 <= d  <= 50
 0 <= arr[i] <= 6
 
-
+//this q becomes - count the number of subsets whose target sum is equal to (totalsum+d)/2
 
 class Solution {
 public:
@@ -49,7 +49,7 @@ public:
         //s1+ s2 = total sum
         //so s1 = (total sum+d)/2
         // i just need to find whether a subset of sum s1 exist in the arr or not 
-        //so if s1 exists then the other one will be s2 only 
+        //so if s1 exists then the remaining sum which is totalsum-subsetsum1 will be s2 only 
         //so this problem became subset sum problem
     int countPartitions(vector<int>& arr, int d) {
         int totalsum = 0;
