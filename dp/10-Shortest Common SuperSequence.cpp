@@ -29,6 +29,54 @@ Add leftovers: If one string is not finished, add the remaining characters.
 Reverse the result: Because you built the answer from the end (right to left).
 Return: The final shortest common supersequence.
 
+1. Why LCS characters only once?
+LCS (Longest Common Subsequence) is the sequence of characters that appears in both strings in the same order.
+In SCS, when we hit a cell where str1[i-1] == str2[j-1],
+that character is common in both, so we add it only once.
+This avoids duplicating the common part.
+2. What if characters are different?
+When str1[i-1] != str2[j-1],
+we have two choices:
+Move left (add str2[j-1])
+Move up (add str1[i-1])
+The DP table tells us which move will result in a longer LCS.
+If moving up (dp[i-1][j] > dp[i][j-1]),
+add str1[i-1]
+Else if moving left (dp[i][j-1] >= dp[i-1][j]),
+add str2[j-1]
+3. Why does this merge both strings?
+Key Point:
+Even though we only add one character at each step when the characters are different,
+the backtracking process covers all positions of both strings.
+When you reach the end (i = 0 or j = 0),
+you add all remaining characters of the unfinished string.
+This way, every single character of str1 and str2 is included somewhere in the final SCS.
+4. Detailed Example
+Let’s take your example:
+str1 = "abac"
+str2 = "cab"
+
+DP Table is built. Now backtracking:
+
+Start at cell (4, 3) (end of both strings).
+If str1[i-1] == str2[j-1], add that character once and decrement both.
+If not, check which direction gives longer LCS and add that character.
+Continue until either string is finished, then add remaining characters.
+What happens if both chars are different?
+
+Suppose at some point, str1[i-1] = 'x', str2[j-1] = 'y' (not equal).
+If DP says move up, add 'x' and move up.
+If DP says move left, add 'y' and move left.
+You never skip any character from either string, because at the end, you add leftovers from both strings.
+5. Why not add both at once when different?
+If you add both at once,
+you’d sometimes duplicate, and the result would be longer than necessary.
+Backtracking with DP ensures:
+All characters are included
+Common characters are merged
+Sequence order from both strings is maintained
+Result is shortest possible supersequence
+
 
 class Solution {
 public:
