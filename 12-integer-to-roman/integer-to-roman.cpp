@@ -1,7 +1,7 @@
 class Solution {
 public:
     string intToRoman(int num) {
-        // These are all Roman numeral symbols, including subtractive forms like "IV", "IX", etc.
+                // These are all Roman numeral symbols, including subtractive forms like "IV", "IX", etc.
         // The order matters! Start from largest to smallest to subtract largest values first.
         vector<string> symbols = {
             "M",  // 1000
@@ -25,19 +25,18 @@ public:
              50,  40,  10,   9,   5,  4, 1
         };
 
-        // This string will store the final Roman numeral result
-        string result;
-
-        // Go through each value-symbol pair from highest to lowest
-        for (int i = 0; i < values.size(); i++) {
-            // Keep using the current Roman symbol as long as its value fits in 'num'
-            while (num >= values[i]) {
-                result += symbols[i]; // Add the Roman symbol to the result
-                num -= values[i];     // Subtract the corresponding value from the number
+string result = "";
+    for(int i = 0; i<symbols.size(); i++){
+        int times = num/values[i];
+        int val = 0;
+        if(times>0){
+            while(times--){
+                result += symbols[i];
             }
+            val +=values[i];
         }
-
-        // Once all values are subtracted and Roman symbols added, return the result
-        return result;
+        if(val != 0)num = num%val;
+    }
+    return result;
     }
 };
