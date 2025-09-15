@@ -1,23 +1,27 @@
 class Solution {
 public:
-    int subarraySum(vector<int>& nums, int k) {
-        unordered_map<int, int> subNum;
-        // This algorithm needs to have total of subarray and frequency of the total. We will use HashMap. Key is total and value is frequency.
-
-
-        subNum[0] = 1;
-        int total = 0, count = 0;
-
-        for (int n : nums) {
-            total += n;
-//Every time we calculate total - k and search for the HashMap
-            if (subNum.find(total - k) != subNum.end()) {
-                count += subNum[total - k];
+    int subarraySum(vector<int>& arr, int k) {
+        int n = arr.size(); // taking the size of the array
+        
+        int ans = 0; // ans variable to store our count
+        
+        for(int i = 0; i < n; i++) // traverse from the array
+        {
+            int sum = arr[i]; // provide sum with arr[i]
+            
+            if(sum == k) // if element itself equal to k, then also increment count
+                ans++;
+            
+            for(int j = i + 1; j < n; j++) // now moving forward,
+            {
+                sum += arr[j]; // add elements with sum
+                
+                if(sum == k) // if at any point they become equal to k
+                    ans++; // increment answer
             }
-
-            subNum[total]++;
+            
         }
-
-        return count;
+        
+        return ans; // and at last, return answer
     }
 };
