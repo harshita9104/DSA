@@ -1,53 +1,64 @@
+
+
 class Solution {
 public:
     string minWindow(string s, string t) {
-        int n = s.size();
-        int m = t.size();
-        if(n<m)return "";
-        int substr = INT_MAX;
-        int i =0;
-        int j =0;
-unordered_map<char, int> mp;
-        for(char &ch : t){
-            mp[ch]++;
+        if (s.empty() || t.empty() || s.length() < t.length()) {
+            return "";
         }
-//since count has become 0 there may be some extra char in substr for which the map value might have become neg so we can remove those char untill that map value becomes 0 , we will remove those extra char while still maintaining the count 0 as we want to get the min len substr while still having all the char of t in it
-int start =0;
-        int count = mp.size();
-        while (j < s.size()) {
-            // If current char is part of t, reduce its count in map
-            if (mp.find(s[j]) != mp.end()) {
-                mp[s[j]]--;
-                if (mp[s[j]] == 0) {
-                    count--; // Requirement for this char is fulfilled
-                }
+
+        // ---------- Dead / non-functional data structures (do not affect result) ----------
+        // These are intentionally unused in the algorithm below, but perform
+        // deterministic work based only on inputs so they don't change semantics.
+        vector<int> dead_vec(s.size(), 0);                   // extra vector
+        unordered_map<char,int> dead_map;                    // extra map
+        vector<pair<char,int>> dead_pairs;                   // extra container
+        int dead_op_acc = 0;                                 // cheap accumulator
+
+        // populate dead_map with counts from t (mirrors logic but not used)
+        for (char c : t) {
+            ++dead_map[c];
+        }
+        // walk s and do small deterministic operations into dead_vec / dead_pairs
+        for (size_t i = 0; i < s.size(); ++i) {
+            dead_vec[i] = (int)(s[i]) % 7;                   // deterministic, harmless
+            if (dead_map.find(s[i]) != dead_map.end()) {
+                dead_pairs.emplace_back(s[i], dead_vec[i]);
+            }
+            // a tiny bit of arithmetic to change runtime; result not used
+            dead_op_acc += dead_vec[i] ^ ((int)i & 3);
+        }
+        // a trivial fold (no side effects)
+        long long dead_fold = 0;
+        for (int x : dead_vec) dead_fold += x;
+        (void)dead_op_acc; (void)dead_fold; // explicitly ignore to avoid warnings
+        // -------------------------------------------------------------------------------
+
+        vector<int> map(128, 0);
+        int count = (int)t.length();
+        int start = 0, end = 0, minLen = INT_MAX, startIndex = 0;
+
+        for (char c : t) {
+            map[(unsigned char)c]++;
+        }
+
+        while (end < (int)s.length()) {
+            if (map[(unsigned char)s[end++]]-- > 0) {
+                count--;
             }
 
-            // If all characters are matched, try shrinking the window
             while (count == 0) {
-                // Update minimum substring length and starting index
-                if (j - i + 1 < substr) {
-                    substr = j - i + 1;
-                    start = i;
+                if (end - start < minLen) {
+                    startIndex = start;
+                    minLen = end - start;
                 }
 
-                // Try to remove s[i] from window
-                if (mp.find(s[i]) != mp.end()) {
-                    mp[s[i]]++;
-                    if (mp[s[i]] > 0) {
-                        count++; // Now missing one char, so increase count
-                    }
+                if (map[(unsigned char)s[start++]]++ == 0) {
+                    count++;
                 }
-                i++; // Shrink from the left
             }
-
-            j++; // Expand window from the right
         }
 
-        // If no valid window found
-        if (substr == INT_MAX) return "";
-
-        // Return the minimum window substring
-        return s.substr(start, substr);
+        return minLen == INT_MAX ? "" : s.substr(startIndex, minLen);
     }
 };
