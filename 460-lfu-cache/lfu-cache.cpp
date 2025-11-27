@@ -1,89 +1,70 @@
-
-//ek map bnega freq naam ka jo ki counter k correspoding doubly linkled list store krega
-//or list m bhi vector store hoga which will store {key, val, freq}
-//or dusre map m key k correspoding adress store hoga
-//jb kisi key ko access kro tab agar vo count wale map m already present hai to ab uski freq inc hogi kyuki hmne usko access kiya
-//to jha vo present h map se uska adress nikalo us adress pr jaaki us elem m vector stored hai us vector k last m count
-//ab har freq k correspodning alg dll hai konsi dll m elem ko erase krna ye us vector k last m count se pta chelga.....freq[count] this will give access to that dll
-//fre[count].erase()
-//count mil gya usko inc kro or dll k front m insert krdo count inc krke ..map m adress bhi change krdo
-
-
-
 class LFUCache {
-private:
-    int cap;
-    int size;
-    unordered_map<int, list<vector<int>>::iterator> mp; //key -> address of list of vector{key, value, freq}
-    map<int, list<vector<int>>> freq; //freq -> list of vector{key, value, freq}
-    
 public:
+int cap;
+int min_freq;
+//key->{val, freq}
+unordered_map<int, pair<int, int>> key_val_freq;
+//freq-> doubly linked list of keys
+unordered_map<int, list<int>> freq_list;
+//key-> pointer to pos in freq list
+unordered_map<int, list<int>::iterator> key_iterator;
     LFUCache(int capacity) {
         cap = capacity;
-        size = 0;
-    }
-    
-    void makeMostFrequentlyUsed(int key) {
-        auto &vec = *(mp[key]);
-        
-        int value = vec[1];
-        
-        int f     = vec[2];
-        
-        freq[f].erase(mp[key]);
-        
-        if(freq[f].empty())
-            freq.erase(f);
-        
-        f++;
-        
-        freq[f].push_front(vector<int>({key, value, f}));
-        
-        mp[key] = freq[f].begin();
+        min_freq=0;
     }
     
     int get(int key) {
-        if(mp.find(key) == mp.end())
+        if(key_val_freq.find(key) == key_val_freq.end()){
             return -1;
-        
-        auto &vec = (*(mp[key]));
-        
-        int value = vec[1];
-        
-        makeMostFrequentlyUsed(key);
-        
-        return value;
+        }
+        increasefreq(key);
+        return key_val_freq[key].first;
     }
     
     void put(int key, int value) {
-        if(cap == 0)
+        if(key_val_freq.find(key) != key_val_freq.end()){
+            key_val_freq[key].first = value;
+            increasefreq(key);
             return;
-        
-        if(mp.find(key) != mp.end()) {
-            auto &vec = (*(mp[key]));
-            vec[1] = value;
-            makeMostFrequentlyUsed(key);
         }
-        else if(size < cap) {
-            size++;
-            freq[1].push_front(vector<int>({key, value, 1}));
-            mp[key] = freq[1].begin();
+        if(key_val_freq.size() >= cap){
+            int key_to_evict = freq_list[min_freq].front();
+            freq_list[min_freq].pop_front();
+            key_val_freq.erase(key_to_evict);
+
         }
-        else { //Time to remove LFU or LRU if tie
-            
-            auto &kaun_sa_list = freq.begin()->second;
-            
-            int key_delete = (kaun_sa_list.back())[0]; //ordered_map ensures that the begin() will be th eleast frequency
-            
-            kaun_sa_list.pop_back();
-            
-            if(kaun_sa_list.empty())
-                freq.erase(freq.begin()->first);
-            
-            freq[1].push_front(vector<int>({key, value, 1}));
-            
-            mp.erase(key_delete);
-            mp[key] = freq[1].begin();
+        key_val_freq[key] = {value, 1};
+        freq_list[1].push_back(key);
+        key_iterator[key] = --freq_list[1].end();
+        min_freq = 1;
+
+    }
+private:
+  void increasefreq(int key){
+    int curr_freq = key_val_freq[key].second;
+    freq_list[curr_freq].erase(key_iterator[key]);
+    if(freq_list[curr_freq].empty()){
+        freq_list.erase(curr_freq);
+        if(min_freq == curr_freq){
+            min_freq++;
         }
     }
+    int next_freq = curr_freq +1;
+    key_val_freq[key].second = next_freq;
+    freq_list[next_freq].push_back(key);
+    key_iterator[key] = --freq_list[next_freq].end();
+  }
+
 };
+// capacity =2, min freq =0;
+// put(1,1) key_val {1:{1,1}} , add 1 to freq_list[1], min_freq =1
+// put(2,2) key_val{2:{2,1}, 1:{1,1}}
+// get(1)
+
+
+/**
+ * Your LFUCache object will be instantiated and called as such:
+ * LFUCache* obj = new LFUCache(capacity);
+ * int param_1 = obj->get(key);
+ * obj->put(key,value);
+ */
